@@ -43,6 +43,15 @@ P.S. You can delete this when you're done too. It's your config now :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- [G] Add relative numbering 
+vim.wo.relativenumber = true
+
+-- [G] Remap Escape to something
+vim.keymap.set("i", "ii", "<Esc>", { noremap = true })
+
+-- [G] Add column reference at 80 characters
+vim.opt.colorcolumn = "80"
+
 -- Install package manager
 --    https://github.com/folke/lazy.nvim
 --    `:help lazy.nvim.txt` for more info
@@ -198,11 +207,16 @@ require('lazy').setup({
     build = ':TSUpdate',
   },
 
+  -- [G] R related plugins
+  'jalvesaq/Nvim-R',
   -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
   --       These are some example plugins that I've included in the kickstart repository.
   --       Uncomment any of the lines below to enable them.
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
+  --
+  -- Require Neotree from plugins (explicitly, see bellow how to load all).
+  --  require 'lua.custom.plugins.filetree'
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
@@ -210,7 +224,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -312,8 +326,8 @@ vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { de
 -- [[ Configure Treesitter ]]
 -- See `:help nvim-treesitter`
 require('nvim-treesitter.configs').setup {
-  -- Add languages to be installed here that you want installed for treesitter
-  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' },
+  -- [G] Add languages to be installed here that you want installed for treesitter
+  ensure_installed = { 'c', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim' , 'r'},
 
   -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
   auto_install = false,
@@ -525,3 +539,29 @@ cmp.setup {
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Configure Nvim-R
+vim.g.R_app = "radian"
+vim.g.R_cmd = "R"
+vim.g.R_hl_term = 0
+vim.g.R_args = {}
+vim.g.R_bracketed_paste = 1
+
+-- Add package facilities
+vim.cmd([[
+" Install the package
+" map <silent> <leader> :call g:SendCmdToR("roxygen::roxygenise()")<CR>
+map <silent> <LocalLeader>rx :call g:SendCmdToR("roxygen2::roxygenise()")<CR>
+map <silent> <LocalLeader>in :call g:SendCmdToR("devtools::install()")<CR>
+map <silent> <LocalLeader>la :call g:SendCmdToR("devtools::load_all()")<CR>
+
+" Autostart R when .R is loaded
+let R_auto_start = 1
+
+" Autostart object browswer when .R is loaded
+let R_objbr_auto_start = 1
+
+" Automatically rearrange windows
+let R_after_ob_open = [':wincmd l', ':wincmd L', ':Neotree', ':wincmd l']
+
+]])

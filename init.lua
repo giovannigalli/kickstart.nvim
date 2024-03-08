@@ -90,6 +90,15 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- [G] Add relative numbering 
+vim.wo.relativenumber = true
+
+-- [G] Remap Escape to something
+-- vim.keymap.set("i", "ii", "<Esc>", { noremap = true })
+
+-- [G] Add column reference at 80 characters
+vim.opt.colorcolumn = "80"
+
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = false
 
@@ -785,7 +794,9 @@ require('lazy').setup({
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        -- [G] Add languages to be installed here that you want installed for treesitter
+        ensure_installed = { 'bash', 'c', 'html', 'cpp', 'go', 'lua', 'python', 'rust', 'tsx', 'javascript', 'typescript', 'vimdoc', 'vim', 'vimdoc', 'r'},
+
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
@@ -801,6 +812,12 @@ require('lazy').setup({
     end,
   },
 
+  -- [G] R related plugins
+  'jalvesaq/Nvim-R',
+  
+  -- Add copilot.
+  'github/copilot.vim',
+  
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- put them in the right spots if you want.
@@ -843,3 +860,34 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- [G] additional bits below.
+-- Configure Nvim-R
+-- vim.g.R_app = "radian"
+vim.g.R_cmd = "R"
+vim.g.R_hl_term = 0
+vim.g.R_args = {}
+vim.g.R_bracketed_paste = 1
+
+-- Add package facilities
+vim.cmd([[
+" Install the package
+" map <silent> <leader> :call g:SendCmdToR("roxygen::roxygenise()")<CR>
+map <silent> <LocalLeader>rx :call g:SendCmdToR("roxygen2::roxygenise()")<CR>
+map <silent> <LocalLeader>in :call g:SendCmdToR("devtools::install()")<CR>
+map <silent> <LocalLeader>lo :call g:SendCmdToR("devtools::load_all()")<CR>
+" Autostart R when .R is loaded
+let R_auto_start = 1
+" Automatically rearrange windows
+let R_after_ob_open = [':wincmd l', ':wincmd L', ':wincmd l']
+]])
+
+-- Notes:
+-- Install r-languageserver with Mason
+
+-- Bits commented out:
+-- " Autostart object browswer when .R is loaded
+-- let R_objbr_auto_start = 1
+-- " Automatically rearrange windows
+-- let R_after_ob_open = [':wincmd l', ':wincmd L', ':Neotree', ':wincmd l']
+

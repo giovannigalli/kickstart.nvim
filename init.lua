@@ -90,7 +90,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
-<<<<<<< HEAD
 -- [G] Add relative numbering
 vim.wo.relativenumber = true
 
@@ -102,10 +101,6 @@ vim.opt.colorcolumn = '80'
 
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
-=======
--- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
->>>>>>> upstream/master
 
 -- [[ Setting options ]]
 -- See `:help vim.opt`

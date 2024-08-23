@@ -4,4 +4,7 @@
 -- See the kickstart.nvim README for more information
 return {
   'David-Kunz/jester',
+  'tpope/vim-commentary',
+  'jalvesaq/Nvim-R',
+  'github/copilot.vim',
 }

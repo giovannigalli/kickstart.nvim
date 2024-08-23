@@ -90,15 +90,6 @@ P.S. You can delete this when you're done too. It's your config now! :)
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
--- [G] Add relative numbering
-vim.wo.relativenumber = true
-
--- [G] Remap Escape to something
--- vim.keymap.set("i", "ii", "<Esc>", { noremap = true })
-
--- [G] Add column reference at 80 characters
-vim.opt.colorcolumn = '80'
-
 -- Set to true if you have a Nerd Font installed
 vim.g.have_nerd_font = true
 
@@ -912,12 +903,6 @@ require('lazy').setup({
     --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
-  -- [G] R related plugins
-  'jalvesaq/Nvim-R',
-
-  -- Add copilot.
-  'github/copilot.vim',
-
   -- The following two comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
@@ -973,9 +958,14 @@ vim.g.R_hl_term = 0
 vim.g.R_args = { '--no-save', '--no-restore', '--quiet' }
 vim.g.R_bracketed_paste = 1
 
+-- Add relative numbering
+vim.wo.relativenumber = true
+
+-- Add column reference at 80 characters
+vim.opt.colorcolumn = '80'
+
 -- Add package facilities
 vim.cmd [[
-" Install the package
 " map <silent> <leader> :call g:SendCmdToR("roxygen::roxygenise()")<CR>
 map <silent> <LocalLeader>rx :call g:SendCmdToR("roxygen2::roxygenise()")<CR>
 " map <silent> <LocalLeader>in :call g:SendCmdToR("devtools::install()")<CR>

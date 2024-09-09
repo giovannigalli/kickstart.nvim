@@ -7,4 +7,5 @@ return {
   'tpope/vim-commentary',
   'jalvesaq/Nvim-R',
   'github/copilot.vim',
+  'luochen1990/rainbow',
 }

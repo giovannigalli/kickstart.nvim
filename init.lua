@@ -957,8 +957,8 @@ require('lazy').setup({
 
 -- [G] additional bits below.
 -- Configure Nvim-R
--- vim.g.R_app = "radian"
--- vim.g.R_cmd = 'R'
+vim.g.R_app = 'radian'
+vim.g.R_cmd = 'R'
 vim.g.R_hl_term = 0
 vim.g.R_args = { '--no-save', '--no-restore', '--quiet' }
 vim.g.R_bracketed_paste = 1
@@ -992,6 +992,7 @@ let R_assign = 0
 
 " Delete instead of cut
 " nnoremap d "_d
+let g:rainbow_active = 1
 
 ]]
 

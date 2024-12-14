@@ -967,7 +967,7 @@ vim.g.R_bracketed_paste = 1
 vim.wo.relativenumber = true
 
 -- Add column reference at 80 characters
-vim.opt.colorcolumn = '80'
+vim.opt.colorcolumn = '120'
 
 -- Add package facilities
 vim.cmd [[
@@ -976,7 +976,6 @@ map <silent> <LocalLeader>rx :call g:SendCmdToR("roxygen2::roxygenise()")<CR>
 " map <silent> <LocalLeader>in :call g:SendCmdToR("devtools::install()")<CR>
 map <silent> <LocalLeader>in :call g:SendCmdToR("try(detach(paste0(\'package:\', pkgload::pkg_name()), unload = TRUE, character.only = TRUE)) ; devtools::install() ; library(pkgload::pkg_name(), character.only = TRUE)")<CR>
 map <silent> <LocalLeader>lo :call g:SendCmdToR("devtools::load_all()")<CR>
-map <silent> <LocalLeader>hh :call g:SendCmdToR("setwd(here::here())")<CR>
 map <silent> <LocalLeader>hh :call g:SendCmdToR("setwd(here::here())")<CR>
 
   " This will close/open R depending on the state
@@ -987,13 +986,15 @@ let R_auto_start = 1
 " Automatically rearrange windows
 let R_after_ob_open = [':wincmd l', ':wincmd L', ':wincmd l']
 
-" Disanle automatic transformation of _ into <-.
+" Disable automatic transformation of _ into <-.
 let R_assign = 0
 
 " Delete instead of cut
 " nnoremap d "_d
 let g:rainbow_active = 1
 
+" Toggle indent guides on start
+let g:indent_guides_enable_on_vim_startup = 1
 ]]
 
 -- Notes:

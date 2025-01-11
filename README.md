@@ -236,3 +236,14 @@ sudo pacman -S --noconfirm --needed gcc make git ripgrep fd unzip neovim
 ```
 </details>
 
+#### To sync this fork with the original repo
+
+```
+git fetch upstream
+git checkout main
+git merge upstream/main
+git push origin main
+```
+
+
+

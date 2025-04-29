@@ -669,7 +669,7 @@ require('lazy').setup({
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
+        pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -1028,21 +1028,7 @@ require('lazy').setup({
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
 
+-- Load custom configuration files
 require 'custom.config.r'
 require 'custom.config.python'
-
--- Add relative numbering
-vim.wo.relativenumber = true
-
--- Add column reference at 80 characters
-vim.opt.colorcolumn = '120'
-
--- Add package facilities
-vim.cmd [[
-" Delete instead of cut
-" nnoremap d "_d
-let g:rainbow_active = 1
-
-" Toggle indent guides on start
-let g:indent_guides_enable_on_vim_startup = 1
-]]
+require 'custom.config.general'

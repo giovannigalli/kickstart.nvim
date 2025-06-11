@@ -8,13 +8,13 @@ return {
   'jalvesaq/Nvim-R',
   'github/copilot.vim',
   'luochen1990/rainbow',
-  {
-    'lukas-reineke/indent-blankline.nvim',
-    main = 'ibl',
-    ---@module "ibl"
-    ---@type ibl.config
-    opts = {},
-  },
+  -- {
+  --   'lukas-reineke/indent-blankline.nvim',
+  --   main = 'ibl',
+  --   ---@module "ibl"
+  --   ---@type ibl.config
+  --   opts = {},
+  -- },
   -- {
   --   'saghen/blink.cmp',
   --   -- optional: provides snippets for the snippet source

@@ -4,6 +4,7 @@ vim.g.R_cmd = 'R'
 vim.g.R_hl_term = 0
 vim.g.R_args = { '--no-save', '--no-restore', '--quiet' }
 vim.g.R_bracketed_paste = 1
+vim.g.R_rmdchunk = 0
 
 vim.cmd [[
 " map <silent> <leader> :call g:SendCmdToR("roxygen::roxygenise()")<CR>
@@ -18,6 +19,7 @@ map <silent> <LocalLeader>RR :call SendCmdToR("q()")<CR>:call StartR("R")<CR>
 
 " Autostart R when .R is loaded
 let R_auto_start = 1
+
 " Automatically rearrange windows
 let R_after_ob_open = [':wincmd l', ':wincmd L', ':wincmd l']
 

@@ -59,56 +59,105 @@
 
 -- File: ~/.config/nvim/lua/custom/config/r.lua
 
--- Ensure Tree-sitter parsers are installed for R.nvim
-require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'r', 'rnoweb', 'markdown', 'yaml' },
-  highlight = { enable = true },
-}
+-- -- Ensure Tree-sitter parsers are installed for R.nvim
+-- require('nvim-treesitter.configs').setup {
+--   ensure_installed = { 'r', 'rnoweb', 'markdown', 'yaml' },
+--   highlight = { enable = true },
+-- }
 
--- R.nvim setup
-require('r').setup {
-  R_cmd = 'R', -- Change to "radian" if you prefer
-  R_args = { '--no-save', '--no-restore', '--quiet' },
-  min_editor_width = 72, -- minimum width for editor window
-  rconsole_width = 78, -- width of R console window
-}
+-- -- R.nvim setup
+-- require('r').setup {
+--   R_cmd = 'R', -- Change to "radian" if you prefer
+--   R_args = { '--no-save', '--no-restore', '--quiet' },
+--   min_editor_width = 72, -- minimum width for editor window
+--   rconsole_width = 78, -- width of R console window
+-- }
 
-local r = require 'r'
+-- local r = require 'r'
 
--- Keymaps for common R commands
-local function map(lhs, rhs)
-  vim.keymap.set('n', lhs, rhs, { silent = true, noremap = true })
-end
+-- -- Keymaps for common R commands
+-- local function map(lhs, rhs)
+--   vim.keymap.set('n', lhs, rhs, { silent = true, noremap = true })
+-- end
 
-map('<LocalLeader>rx', function()
-  r.send_line 'roxygen2::roxygenise()'
-end)
+-- map('<LocalLeader>rx', function()
+--   r.send_line 'roxygen2::roxygenise()'
+-- end)
 
-map('<LocalLeader>in', function()
-  r.send_line [[
-try(detach(paste0('package:', pkgload::pkg_name()), unload = TRUE, character.only = TRUE));
-devtools::install();
-library(pkgload::pkg_name(), character.only = TRUE)
-]]
-end)
+-- map('<LocalLeader>in', function()
+--   r.send_line [[
+-- try(detach(paste0('package:', pkgload::pkg_name()), unload = TRUE, character.only = TRUE));
+-- devtools::install();
+-- library(pkgload::pkg_name(), character.only = TRUE)
+-- ]]
+-- end)
 
-map('<LocalLeader>lo', function()
-  r.send_line 'devtools::load_all()'
-end)
+-- map('<LocalLeader>lo', function()
+--   r.send_line 'devtools::load_all()'
+-- end)
 
-map('<LocalLeader>hh', function()
-  r.send_line 'setwd(here::here())'
-end)
+-- map('<LocalLeader>hh', function()
+--   r.send_line 'setwd(here::here())'
+-- end)
 
--- Restart R session (just quit, next send_line will reopen console)
-map('<LocalLeader>RR', function()
-  r.send_line 'q()'
-end)
+-- -- Restart R session (just quit, next send_line will reopen console)
+-- map('<LocalLeader>RR', function()
+--   r.send_line 'q()'
+-- end)
 
--- Disable formatting for r_language_server if using another formatter (like 'air')
-require('lspconfig').r_language_server.setup {
-  on_attach = function(client, _)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
+-- vim.lsp.config('r_language_server', {
+--   on_attach = function(client, _)
+--     client.server_capabilities.documentFormattingProvider = false
+--     client.server_capabilities.documentRangeFormattingProvider = false
+--   end,
+-- })
+
+-- vim.lsp.enable { 'r_language_server' }
+return {
+  'R-nvim/R.nvim',
+  -- Only required if you also set defaults.lazy = true
+  lazy = false,
+  -- R.nvim is still young and we may make some breaking changes from time
+  -- to time (but also bug fixes all the time). If configuration stability
+  -- is a high priority for you, pin to the latest minor version, but unpin
+  -- it and try the latest version before reporting an issue:
+  -- version = "~0.1.0"
+  config = function()
+    -- Create a table with the options to be passed to setup()
+    ---@type RConfigUserOpts
+    local opts = {
+      hook = {
+        on_filetype = function()
+          vim.api.nvim_buf_set_keymap(0, 'n', '<Enter>', '<Plug>RDSendLine', {})
+          vim.api.nvim_buf_set_keymap(0, 'v', '<Enter>', '<Plug>RSendSelection', {})
+        end,
+      },
+      R_app = 'R', -- Change to "radian" if you prefer
+      R_args = { '--quiet', '--no-save' },
+      min_editor_width = 72,
+      rconsole_width = 78,
+      objbr_mappings = { -- Object browser keymap
+        c = 'class', -- Call R functions
+        ['<localleader>gg'] = 'head({object}, n = 15)', -- Use {object} notation to write arbitrary R code.
+        v = function()
+          -- Run lua functions
+          require('r.browser').toggle_view()
+        end,
+      },
+      disable_cmds = {
+        'RClearConsole',
+        'RCustomStart',
+        'RSPlot',
+        'RSaveClose',
+      },
+    }
+    -- Check if the environment variable "R_AUTO_START" exists.
+    -- If using fish shell, you could put in your config.fish:
+    -- alias r "R_AUTO_START=true nvim"
+    if vim.env.R_AUTO_START == 'true' then
+      opts.auto_start = 'on startup'
+      opts.objbr_auto_start = true
+    end
+    require('r').setup(opts)
   end,
 }

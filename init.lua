@@ -1038,4 +1038,4 @@ require('lazy').setup({
 require 'custom.plugins.init'
 require 'custom.config.r'
 require 'custom.config.python'
--- require 'custom.config.general'
+require 'custom.config.general'

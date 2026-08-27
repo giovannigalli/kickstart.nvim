@@ -122,10 +122,6 @@ do
   --  Schedule the setting after `UiEnter` because it can increase startup-time.
   --  Remove this option if you want your OS clipboard to remain independent.
   --  See `:help 'clipboard'`
-  local termfeatures = vim.g.termfeatures or {}
-  termfeatures.osc52 = false
-  vim.g.termfeatures = termfeatures
-
   vim.schedule(function() vim.o.clipboard = 'unnamedplus' end)
 
   -- Enable break indent
@@ -311,15 +307,6 @@ do
 
       if name == 'LuaSnip' then
         if vim.fn.has 'win32' ~= 1 and vim.fn.executable 'make' == 1 then run_build(name, { 'make', 'install_jsregexp' }, ev.data.path) end
-        return
-      end
-
-      if name == 'blink.cmp' then
-        if vim.fn.executable 'cargo' == 1 then
-          run_build(name, { 'cargo', 'build', '--release' }, ev.data.path)
-        else
-          vim.notify('cargo is not installed; skipping blink.cmp fuzzy matcher build', vim.log.levels.WARN)
-        end
         return
       end
 
@@ -753,7 +740,7 @@ do
 
   vim.pack.add {
     gh 'neovim/nvim-lspconfig',
-    { src = gh 'mason-org/mason.nvim', version = vim.version.range '2.*' },
+    gh 'mason-org/mason.nvim',
     gh 'mason-org/mason-lspconfig.nvim',
     gh 'WhoIsSethDaniel/mason-tool-installer.nvim',
   }
@@ -776,7 +763,6 @@ do
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {
     -- You can add other tools here that you want Mason to install
-    'tree-sitter-cli',
   })
 
   require('mason-tool-installer').setup { ensure_installed = ensure_installed }
@@ -797,11 +783,15 @@ do
   require('conform').setup {
     notify_on_error = false,
     format_on_save = function(bufnr)
-      local disable_filetypes = { c = true, cpp = true }
-      if disable_filetypes[vim.bo[bufnr].filetype] then
-        return nil
+      -- You can specify filetypes to autoformat on save here:
+      local enabled_filetypes = {
+        -- lua = true,
+        -- python = true,
+      }
+      if enabled_filetypes[vim.bo[bufnr].filetype] then
+        return { timeout_ms = 500 }
       else
-        return { timeout_ms = 10000 }
+        return nil
       end
     end,
     default_format_opts = {
@@ -809,11 +799,9 @@ do
     },
     -- You can also specify external formatters in here.
     formatters_by_ft = {
-      lua = { 'stylua' },
+      -- rust = { 'rustfmt' },
       -- Conform can also run multiple formatters sequentially
-      python = { 'isort', 'black' },
-      r = { 'air' },
-      json = { 'prettier' },
+      -- python = { "isort", "black" },
       --
       -- You can use 'stop_after_first' to run the first available formatter from the list
       -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -891,10 +879,14 @@ do
 
     snippets = { preset = 'luasnip' },
 
-    -- Blink.cmp includes a recommended rust fuzzy matcher. The PackChanged
-    -- hook above builds it from source after vim.pack installs or updates.
+    -- Blink.cmp includes an optional, recommended rust fuzzy matcher,
+    -- which automatically downloads a prebuilt binary when enabled.
+    --
+    -- By default, we use the Lua implementation instead, but you may enable
+    -- the rust implementation via `'prefer_rust_with_warning'`
+    --
     -- See `:help blink-cmp-config-fuzzy` for more information
-    fuzzy = { implementation = 'prefer_rust_with_warning' },
+    fuzzy = { implementation = 'lua' },
 
     -- Shows a signature help window while you type arguments for a function
     signature = { enabled = true },
@@ -915,24 +907,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = {
-    'bash',
-    'c',
-    'csv',
-    'diff',
-    'html',
-    'latex',
-    'lua',
-    'luadoc',
-    'markdown',
-    'markdown_inline',
-    'query',
-    'r',
-    'rnoweb',
-    'vim',
-    'vimdoc',
-    'yaml',
-  }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer
@@ -1004,13 +979,8 @@ do
   -- NOTE: You can add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
-  require 'custom.plugins'
+  require 'custom'
 end
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
-
--- Load custom configuration files
-require 'custom.config.r'
-require 'custom.config.python'
-require 'custom.config.general'

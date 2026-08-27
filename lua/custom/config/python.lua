@@ -1,5 +1,1 @@
-return {
-  -- Set leader key to space
-  -- vim.api.nvim_set_keymap('n', '<leader>py', ':w<CR>:!python3 %<CR>', { noremap = true, silent = true }),
-  vim.api.nvim_set_keymap('n', '<leader>py', ':w<CR>:!python3 %<CR>', { noremap = true, silent = true }),
-}
+vim.keymap.set('n', '<leader>py', '<cmd>w<CR><cmd>!python3 %<CR>', { desc = 'Run current Python file', silent = true })

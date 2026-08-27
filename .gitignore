@@ -4,4 +4,8 @@ test.sh
 nvim
 
 spell/
+
+# Legacy lockfile from lazy.nvim; this fork now uses vim.pack.
 lazy-lock.json
+
+.DS_Store

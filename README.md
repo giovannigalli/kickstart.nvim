@@ -248,6 +248,20 @@ sudo apt install make gcc ripgrep fd-find tree-sitter-cli unzip git xclip neovim
 </details>
 
 #### Linux Install
+<details><summary>NixOS Install Steps</summary>
+
+Mason's automatic tool installation is disabled on NixOS so its generic Linux
+binaries do not override native Nix packages. Add the editor tools to your NixOS configuration:
+
+```nix
+environment.systemPackages = with pkgs; [
+  neovim git unzip curl gcc gnumake tree-sitter ripgrep fd nodejs
+  lua-language-server stylua air-formatter prettier
+  python3Packages.black python3Packages.isort
+];
+```
+</details>
+
 <details><summary>Ubuntu Install Steps</summary>
 
 ```
@@ -276,8 +290,11 @@ sudo ln -sf /opt/nvim-linux-x86_64/bin/nvim /usr/local/bin/
 <details><summary>Fedora Install Steps</summary>
 
 ```
-sudo dnf install -y gcc make git ripgrep fd-find tree-sitter-cli unzip neovim
+sudo dnf install -y gcc make git ripgrep fd-find tree-sitter-cli unzip neovim nodejs npm python3-pip
 ```
+
+On Fedora and other conventional Linux distributions, Mason installs the
+configured language servers and formatters when Neovim starts.
 </details>
 
 <details><summary>Arch Install Steps</summary>
